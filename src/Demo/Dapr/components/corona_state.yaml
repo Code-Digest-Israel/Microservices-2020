@@ -1,0 +1,34 @@
+# apiVersion: dapr.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: corona_state
+# spec:
+#   type: state.redis
+#   metadata:
+#   - name: redisHost
+#     value: localhost:6379
+#   - name: redisPassword
+#     value: ""
+#   - name: actorStateStore
+#     value: "true"
+
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: corona_state
+  namespace: default
+spec:
+  type: state.azure.cosmosdb
+  metadata:
+  - name: url
+    value: https://corona-state.documents.azure.com:443/
+  - name: masterKey
+    secretKeyRef:
+      name: cosmoskey
+      key: cosmoskey
+  - name: database
+    value: corona-state
+  - name: collection
+    value: cities
+auth:
+    secretStore: azurekeyvault

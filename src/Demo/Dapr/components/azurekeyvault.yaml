@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: azurekeyvault
+  namespace: default
+spec:
+  type: secretstores.azure.keyvault
+  metadata:
+  - name: vaultName
+    value: corona-keys
+  - name: spnTenantId
+    value: "be01584c-2f80-4a1b-9b54-4389182bea02"
+  - name: spnClientId
+    value: "b06eaefa-b202-42c4-8271-70e8782c1d0a"
+  - name: spnCertificateFile
+    value : "S:\\Programming\\Github\\Architecture-next-2020-dapr\\demo\\Corona\\components\\corona-keys-demo-20200629.pfx"

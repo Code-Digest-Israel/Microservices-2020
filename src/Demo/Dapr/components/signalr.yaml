@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: corona-notifications
+  namespace: default
+spec:
+  type: bindings.azure.signalr
+  metadata:
+  - name: connectionString
+    secretKeyRef:
+      name: signalr-connectionstring
+      key: signalr-connectionstring
+  - name: hub #optional - can be specified in the notification's metadata object
+    value: outbreaks
+auth:
+    secretStore: azurekeyvault

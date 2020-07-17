@@ -1,0 +1,34 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.redis
+  metadata:
+  - name: redisHost
+    value: localhost:6379
+  - name: redisPassword
+    value: ""
+
+# apiVersion: dapr.io/v1alpha1
+# kind: Component
+# metadata:
+#   name: pubsub
+#   namespace: default
+# spec:
+#   type: pubsub.azure.eventhubs
+#   metadata:
+#   - name: connectionString
+#     secretKeyRef:
+#       name: corona-pubsub-eventhubs-connectionstring
+#       key: corona-pubsub-eventhubs-connectionstring
+#   - name: storageAccountName
+#     value: archnextcoronademo
+#   - name: storageAccountKey
+#     secretKeyRef:
+#       name: corona-storage-key
+#       key: corona-storage-key
+#   - name: storageContainerName
+#     value: corona-demo-eventhubs
+# auth:
+#     secretStore: azurekeyvault

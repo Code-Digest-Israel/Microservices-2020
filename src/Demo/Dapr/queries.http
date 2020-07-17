@@ -1,0 +1,28 @@
+### Input Service
+POST http://localhost:5001/corona
+content-type: application/json
+
+{
+ "city": "Acre",
+ "added": 50
+}
+
+### Processing Service
+POST http://localhost:5002/process
+content-type: application/json
+
+{
+ "city": "Acre",
+ "added": 2
+}
+
+### Output Service
+POST http://localhost:5003/outbreak
+content-type: application/json
+
+{
+  "data": {
+    "city": "Acre",
+    "patients": 3
+  }
+}
