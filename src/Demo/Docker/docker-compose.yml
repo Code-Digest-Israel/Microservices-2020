@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  input-service:
+    restart: "always"
+    image: input-service
+    build:
+      context: ./input-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - LOG_LEVEL=info
+      - LOG_TRANSPORT_HOST=elk-stack
+      - LOG_TRANSPORT_PORT=5045
+      - HTTPS_PRIVATE_KEY=/app/key.pem
+      - HTTPS_PUBLIC_CERT=/app/cert.pem
+    ports:
+      - 5020:5001
+    # depends_on:
+    #   - retbpg
+  processing-service:
+    restart: "always"
+    image: processing-service
+    build:
+      context: ./processing-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - LOG_LEVEL=info
+      - LOG_TRANSPORT_HOST=elk-stack
+      - LOG_TRANSPORT_PORT=5045
+      - HTTPS_PRIVATE_KEY=/app/key.pem
+      - HTTPS_PUBLIC_CERT=/app/cert.pem
+    ports:
+      - 5002:5002
+    # depends_on:
+    #   - retbpg
