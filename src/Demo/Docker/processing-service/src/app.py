@@ -5,6 +5,7 @@ import sys
 import os
 import requests
 import json
+json_file = open('./data.json',) 
 
 app = flask.Flask(__name__)
 CORS(app)
@@ -33,8 +34,7 @@ def process():
 
     existing_patients = get_existing_patients(state_url, city)
     updated_patients = added + existing_patients
-
-    update_patients(state_url, city, updated_patients)
+    print(f"Added oatients: {updated_patients}, added:{added}")
 
     if(updated_patients > 100):
 	    prodcast_outbreak(prodcast_url, city, updated_patients)
@@ -80,15 +80,12 @@ def update_patients(state_url, city, updated_patients):
     print(f"save update statusCode = {response.status_code}", flush=True)
 
 def get_existing_patients(state_url, city):
-
-    response = requests.get(url = f"{state_url}/{city}")
-    print(f"get existing statusCode = {response.status_code}", flush=True)
-
-    if(response.ok and response.text):
-        print(f"result text = {response.text}", flush=True)
-        return int(json.loads(response.text)["patients"])
+    data = json.loads(json_file.read())
+    print(f"get existing patients {data}", flush=True)
+    json_file.close()
+    return int(data["haifa"])
     
-    return 0
+    
 
 def delete_patients(state_url, city):
 
