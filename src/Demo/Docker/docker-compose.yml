@@ -33,7 +33,7 @@ services:
       - HTTPS_PRIVATE_KEY=/app/key.pem
       - HTTPS_PUBLIC_CERT=/app/cert.pem
     ports:
-      - 5002:5002
+      - 5002
     # depends_on:
     #   - retbpg
 
@@ -52,6 +52,6 @@ services:
       - HTTPS_PRIVATE_KEY=/app/key.pem
       - HTTPS_PUBLIC_CERT=/app/cert.pem
     ports:
-      - 5003:80
+      - 5021:80
     # depends_on:
     #   - retb
