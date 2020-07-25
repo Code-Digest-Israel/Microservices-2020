@@ -19,7 +19,7 @@ state_store_name = 'corona_state'
 state_url = f"{base_url}/state/{state_store_name}"
 
 prodcast_method_name = 'outbreak'
-prodcast_url = f"{base_url}/publish/{prodcast_method_name}"
+prodcast_url = "http://output-service:5003/api/notifications"
 
 print(f"Ruuning flask service on port {port}...", flush=True)
 
@@ -43,17 +43,16 @@ def process():
 
 
 def prodcast_outbreak(prodcast_url, city, updated_patients):
-    print(f"prodcasting outbreak for city '{city}' with '{updated_patients}' patients", flush=True)
+    print(f"prodcasting outbreak for cityy '{city}' with '{prodcast_url}' patients", flush=True)
 
-    data = { 'city': city, 'patients': updated_patients }
 
-    headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',        
-    }
-
-    response = requests.post(url = prodcast_url, data = json.dumps(data), headers = headers)
+    # headers = {
+    #     'Accept': 'application/json',
+    #     'Content-Type': 'application/json',        
+    # }
     print(f"prodcast url = {prodcast_url}")
+
+    response = requests.post( "http://output-service:5003/api/notifications", { 'city': city, 'patients': updated_patients })
     print(f"prodcast outbreak statusCode = {response.status_code}", flush=True)
     
 def update_patients(state_url, city, updated_patients):

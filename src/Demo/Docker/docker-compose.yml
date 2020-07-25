@@ -36,3 +36,22 @@ services:
       - 5002:5002
     # depends_on:
     #   - retbpg
+
+  output-service:
+    restart: "always"
+    image: output-service
+    build:
+      context: ./output-service
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - LOG_LEVEL=info
+      - LOG_TRANSPORT_HOST=elk-stack
+      - LOG_TRANSPORT_PORT=5045
+      - HTTPS_PRIVATE_KEY=/app/key.pem
+      - HTTPS_PUBLIC_CERT=/app/cert.pem
+    ports:
+      - 5003:80
+    # depends_on:
+    #   - retb
