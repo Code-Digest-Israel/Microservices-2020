@@ -5,7 +5,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const daprPort = process.env.DAPR_HTTP_PORT || 4001;
 const port = 5001;
 
 app.post("/corona", function (req, res) {

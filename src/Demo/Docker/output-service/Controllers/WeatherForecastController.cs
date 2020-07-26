@@ -33,7 +33,6 @@ namespace output_service.Controllers
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new OutrageNotification
             {
-                Date = DateTime.Now.AddDays(index),
                 NumOfPatients = rng.Next(-20, 55),
                 City = Summaries[rng.Next(Summaries.Length)]
             })
@@ -43,7 +42,7 @@ namespace output_service.Controllers
         [HttpPost]
         public IActionResult PostUpdate(OutrageNotification outrageNotification)
         {
-            Console.WriteLine("hi post");
+            Console.WriteLine($"Sending Patients Notification, in {outrageNotification.City}, num of patients: {outrageNotification.NumOfPatients}!");
             //send SignalR notification
             return Ok(outrageNotification);
         }
