@@ -1,0 +1,131 @@
+<html>
+  <header>
+    <title>Corona map</title>
+    <meta charset="utf-8" />
+  </header>
+
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.3/signalr.min.js"></script>
+    <script type="text/javascript" src="http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AohV2xMODxEKLLVk3s_3SPjoIIPxtT7iyU3px8Z56hMx6izNMEpYwr9VrxJBzMBM" async defer></script>
+
+    <div id="myMap" style="width: 100vw; height: 100vh;"></div>
+    <script type="text/javascript">
+      const accessToken =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJhbGV4IiwibmJmIjoxNTk1OTYxMzc5LCJleHAiOjE1OTU5NjQ5NzksImlhdCI6MTU5NTk2MTM3OSwiYXVkIjoiaHR0cHM6Ly9jb2RlLWRpZ2VzdC1taWNyb3NlcnZpY2VzLnNlcnZpY2Uuc2lnbmFsci5uZXQvY2xpZW50Lz9odWI9b3V0YnJlYWtzIn0.r9EQUTfIla2Kw6TCuZBDiN6DML_e5uoefBhPKcwY5ao"
+      const url = "https://code-digest-microservices.service.signalr.net/client/?hub=outbreaks"
+
+      var map
+      var searchManager
+
+      function GetMap() {
+        map = new Microsoft.Maps.Map("#myMap")
+        searchManager
+
+        Microsoft.Maps.loadModule(["Microsoft.Maps.AutoSuggest", "Microsoft.Maps.Search"], function () {
+          var manager = new Microsoft.Maps.AutosuggestManager({ map: map })
+
+          searchManager = new Microsoft.Maps.Search.SearchManager(map)
+        })
+
+        Microsoft.Maps.loadModule("Microsoft.Maps.SpatialMath", function () {
+          //Request the user's location
+          navigator.geolocation.getCurrentPosition(function (position) {
+            var loc = new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude)
+            map.setView({ center: loc, zoom: 9 })
+          })
+        })
+
+        // setTimeout(function() { search(map, searchManager, "Nesher"); setTimeout(function() { search(map, searchManager, "Nahariyya"); }, 2000); }, 2000);
+      }
+
+      const connection = new signalR.HubConnectionBuilder()
+        .withUrl(url, { skipNegotiation: true, transport: 1, accessTokenFactory: () => accessToken })
+        .withAutomaticReconnect()
+        .build()
+
+      const me = this
+
+      connection.on("outbreak", (data) => {
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@", data)
+        const city = data.City
+        const updated = data.Patients
+
+        console.dir(data)
+        me.search(map, searchManager, city)
+      })
+
+      connection.onclose(function () {
+        console.log("signalr disconnected")
+      })
+
+      connection.onreconnecting((err) => console.log("err reconnecting  ", err))
+
+      connection
+        .start()
+        .then((res) => console.log("connected"))
+        .catch(console.error)
+
+      function search(map, searchManager, city, updated) {
+        if (!map || !searchManager || !city) {
+          return
+        }
+
+        const request = {
+          where: city,
+          callback: function (r) {
+            mark(map, r, updated)
+          },
+          errorCallback: function (e) {
+            console.log("Error: " + e)
+          },
+        }
+
+        console.dir(request)
+        searchManager.geocode(request)
+      }
+
+      function mark(map, r, text) {
+        console.log("marking")
+        if (r && r.results && r.results.length > 0) {
+          var pin,
+            pins = [],
+            locs = []
+
+          //Add a pushpin for each result to the map and create a list to display.
+          for (var i = 0; i < r.results.length; i++) {
+            //Create a pushpin for each result.
+            drawCircle(map, r.results[i].location)
+          }
+        }
+      }
+
+      function drawCircle(map, location) {
+        var loc = new Microsoft.Maps.Location(location.latitude, location.longitude)
+        var path = Microsoft.Maps.SpatialMath.getRegularPolygon(loc, 8000, 36, Microsoft.Maps.SpatialMath.Meters)
+
+        var poly = new Microsoft.Maps.Polygon(path)
+        var pin = new Microsoft.Maps.Pushpin(location, { title: location.name, textOffset: -1 })
+
+        var toRemove = []
+
+        for (var i = map.entities.getLength() - 1; i >= 0; i--) {
+          var entity = map.entities.get(i)
+
+          if (entity instanceof Microsoft.Maps.Pushpin && entity.getTextOffset() == -1) {
+            toRemove.push(entity)
+          }
+        }
+
+        // for(var i = 0; i < toRemove.length; ++i)
+        // {
+        // 	console.log("remove");
+        // 	console.dir(toRemove[i])
+        // 	map.entities.remove(toRemove[i]);
+        // }
+
+        map.entities.push(poly)
+        map.entities.push(pin)
+      }
+    </script>
+  </body>
+</html>
