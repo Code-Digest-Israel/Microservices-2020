@@ -1,0 +1,60 @@
+<html>
+    <header>
+        <title>Covid19 - Form</title>
+    </header>
+    <body>
+        <h1 class="center">Covid19 - Control Center</h1>
+        <div class="center">
+            <img src="covid19-image.jpg" class="imageWidth">
+        </div>
+        <div>
+            <br>
+            <br>
+            <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+            <form action="http://localhost:5001/corona" method="post" target="dummyframe" class="center form-example">
+                <div class="form-example">
+                  <label for="city">City: </label>
+                  <input type="text" name="city" id="city" required>
+                </div>
+                <div class="form-example">
+                  <label for="cases">New cases: </label>
+                  <input type="text" name="added" id="added" required>
+                </div>
+                <div class="form-example">
+                  <input type="submit" value="Submit">
+                </div>
+              </form>
+
+              <script>
+                function send()
+                {
+                    var url = "http://localhost:5001/corona";
+                    location.href = url;
+                    return false;
+                }
+            </script>
+        </div>
+
+    </body>
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
+        .imageWidth
+        {
+            max-width: 400px;
+        }
+        
+        label, input {
+            display: table-cell;
+            margin-bottom: 10px;
+        }
+        label {
+            padding-right: 10px;
+        }
+    </style>
+</html>
