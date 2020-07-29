@@ -7,7 +7,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const port = 5001;
 
-app.post("/corona", function (req, res) {
+app.post("api/corona", function (req, res) {
   const city = req.body.city;
   const added = req.body.added;
 
