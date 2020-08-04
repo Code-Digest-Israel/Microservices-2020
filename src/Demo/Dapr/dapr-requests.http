@@ -1,8 +1,0 @@
-POST http://localhost:3500/v1.0/invoke/nodeapp/method/neworder
-content-type: application/json
-
-{
-  "data": {
-    "orderId": "42"
-  } 
-}

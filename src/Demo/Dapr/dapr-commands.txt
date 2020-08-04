@@ -1,0 +1,7 @@
+dapr run --app-id input-service --app-port 5001 --port 4001 --config demo/corona/components/tracing.yaml --components-path demo/corona/components node demo/corona/input-service/src/index.js
+dapr run --app-id processing-service --app-port 5002 --port 4002 --config demo/corona/components/tracing.yaml --components-path demo/corona/components py demo/corona/processing-service/src/app.py
+dapr run --app-id output-service --app-port 5003 --port 4003 --config demo/corona/components/tracing.yaml --components-path demo/corona/components demo\Corona\output-service\run.bat
+
+docker run -e APPINSIGHTS_INSTRUMENTATIONKEY=<instrumentation-key> -e APPINSIGHTS_LIVEMETRICSSTREAMAUTHENTICATIONAPIKEY=<key> -d -p 55678:55678 daprio/dapr-localforwarder:latest
+
+
